@@ -1,0 +1,18 @@
+scheme:
+- { linktype: p2p, left_router: ce1, vlan: 901, right_router: pe1, pref: 10.1.0.0/31 }
+- { linktype: p2p, left_router: ce1, vlan: 902, right_router: pe2, pref: 10.1.0.4/31 }
+- { linktype: p2p, left_router: pe1, vlan: 903, right_router: pe2, pref: 10.0.0.0/31 }
+- { linktype: p2p, left_router: pe1, vlan: 906, right_router: p1, pref: 10.0.0.2/31 }
+- { linktype: p2p, left_router: pe2, vlan: 907, right_router: p2, pref: 10.0.0.4/31 }
+- { linktype: p2p, left_router: p1, vlan: 908, right_router: rr1, pref: 10.0.0.16/31 }
+- { linktype: p2p, left_router: p1, vlan: 909, right_router: p2, pref: 10.0.0.6/31 }
+- { linktype: p2p, left_router: p1, vlan: 910, right_router: p2, pref: 10.0.0.24/31 }
+- { linktype: p2p, left_router: p1, vlan: 911, right_router: rr2, pref: 10.0.0.20/31 }
+- { linktype: p2p, left_router: rr1, vlan: 912, right_router: rr2, pref: 10.0.0.14/31 }
+- { linktype: p2p, left_router: p2, vlan: 913, right_router: rr1, pref: 10.0.0.18/31 }
+- { linktype: p2p, left_router: p2, vlan: 914, right_router: rr2, pref: 10.0.0.22/31 }
+- { linktype: p2p, left_router: ce2, vlan: 904, right_router: pe1, pref: 10.1.0.6/31 }
+- { linktype: p2p, left_router: ce2, vlan: 905, right_router: pe2, pref: 10.1.0.2/31 }
+- { linktype: lan, router: ce1, vlan: 4011, desc: lan-ce1-ce2-h1, pref: 10.1.12.1/24 }
+- { linktype: lan, router: ce2, vlan: 4011, desc: lan-ce1-ce2-h1, pref: 10.1.12.2/24 }
+

@@ -1,0 +1,50 @@
+{% macro conf_link_p2p(inventory_hostname, vlan, peer, pref, is_left) -%}
+{% set ip = pref|ipaddr(0) if is_left else pref|ipaddr(1) %}
+
+
+interface gi0/0/0/0.{{ vlan }}
+  desc {{ inventory_hostname }}-{{ peer }}
+  ip address {{ ip }}
+  encapsulation dot1q {{ vlan }}
+
+{%- endmacro %}
+
+{% macro conf_link(inventory_hostname, vlan, desc,  pref) -%}
+{% set ip = pref|ipaddr('host') %}
+
+
+interface gi0/0/0/0.{{ vlan }}
+  desc {{ desc }}
+  ip address {{ ip }}
+  encapsulation dot1q {{ vlan }}
+
+{%- endmacro %}
+
+interface lo0
+   ip address {{ lo40 }}/32
+
+{#
+scheme:
+- { linktype: p2p, left_router: ce1, vlan: 901, right_router: pe1, pref: 3.3.3.2/31 }
+- { linktype: p2p, left_router: ce1, vlan: 902, right_router: pe2, pref: 4.4.4.6/30 }
+- { linktype: lan, router: c1, vlan: 903, desc: lan, pref: 1.1.1.1/24 }
+- { linktype: lan, router: c2, vlan: 903, desc: lan, pref: 1.1.1.2/24 }
+- { linktype: lan, router: j1, vlan: 903, desc: lan, pref: 1.1.1.12/24 }
+- { linktype: lan, router: j2, vlan: 903, desc: lan, pref: 1.1.1.101/24 }
+#}
+
+{% for link in scheme %}
+	{% if link.linktype == "p2p" %}
+		{% if inventory_hostname == link.left_router %}
+			{{ conf_link_p2p(link.left_router, link.vlan, link.right_router, link.pref, true) }}
+		{% elif inventory_hostname == link.right_router %}
+			{{ conf_link_p2p(link.right_router, link.vlan, link.left_router, link.pref, false) }}
+		{% else %}
+		{% endif %}
+	{% else %}
+		{% if inventory_hostname == link.router %}
+			{{ conf_link(inventory_hostname, link.vlan, link.desc, link.pref) }}
+		{% else %}
+		{% endif %}
+	{% endif %}
+{% endfor %}
