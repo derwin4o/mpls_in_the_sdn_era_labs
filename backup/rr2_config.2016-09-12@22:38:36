@@ -1,0 +1,215 @@
+
+Mon Sep 12 22:38:16.559 UTC
+Building configuration...
+!! IOS XR Configuration 5.2.2
+!! Last configuration change at Wed May 18 13:38:47 2016 by rado
+!
+hostname PE4
+group GR-LSP
+ interface 'tunnel-te.*'
+  ipv4 unnumbered Loopback0
+  autoroute announce
+  !
+  record-route
+  path-option 1 dynamic
+ !
+end-group
+logging console debugging
+domain name xx
+line default
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+ transport preferred ssh
+!
+interface Loopback0
+ ipv4 address 172.16.0.44 255.255.255.255
+ ipv6 address 2001::13/128
+!
+interface tunnel-te11
+ apply-group GR-LSP
+ signalled-name PE4--->PE1
+ destination 172.16.0.11
+!
+interface tunnel-te22
+ apply-group GR-LSP
+ signalled-name PE4--->PE2
+ destination 172.16.0.22
+!
+interface tunnel-te33
+ apply-group GR-LSP
+ signalled-name PE4--->PE3
+ destination 172.16.0.33
+!
+interface MgmtEth0/0/CPU0/0
+ ipv4 address 192.168.1.23 255.255.255.0
+!
+interface GigabitEthernet0/0/0/0.113
+ ipv4 address 1.1.13.13 255.255.255.0
+ ipv6 address 2001:1:d::d/64
+ encapsulation dot1q 113
+!
+interface GigabitEthernet0/0/0/0.213
+ ipv4 address 1.2.13.13 255.255.255.0
+ ipv6 address 2001:2:d::d/64
+ encapsulation dot1q 213
+!
+interface GigabitEthernet0/0/0/0.313
+ ipv4 address 1.3.13.13 255.255.255.0
+ ipv6 address 2001:3:d::d/64
+ encapsulation dot1q 313
+!
+interface GigabitEthernet0/0/0/0.413
+ ipv4 address 1.4.13.13 255.255.255.0
+ ipv6 address 2001:4:d::d/64
+ encapsulation dot1q 413
+!
+interface GigabitEthernet0/0/0/0.513
+ description PE4-PE3
+ ipv4 address 10.0.0.13 255.255.255.254
+ encapsulation dot1q 513
+!
+interface GigabitEthernet0/0/0/0.613
+ ipv4 address 1.6.13.13 255.255.255.0
+ ipv6 address 2001:6:d::d/64
+ encapsulation dot1q 613
+!
+interface GigabitEthernet0/0/0/0.713
+ ipv4 address 1.7.13.13 255.255.255.0
+ encapsulation dot1q 713
+!
+interface GigabitEthernet0/0/0/0.813
+ ipv4 address 1.8.13.13 255.255.255.0
+ ipv6 address 2001:8:d::d/64
+ encapsulation dot1q 813
+!
+interface GigabitEthernet0/0/0/0.913
+ ipv4 address 1.9.13.13 255.255.255.0
+ ipv6 address 2001:9:d::d/64
+ encapsulation dot1q 913
+!
+interface GigabitEthernet0/0/0/0.1013
+ ipv4 address 1.10.13.13 255.255.255.0
+ ipv6 address 2001:a:d::d/64
+ encapsulation dot1q 1013
+!
+interface GigabitEthernet0/0/0/0.1113
+ ipv4 address 1.11.13.13 255.255.255.0
+ ipv6 address 2001:b:d::d/64
+ encapsulation dot1q 1113
+!
+interface GigabitEthernet0/0/0/0.1213
+ description PE4-P2
+ ipv4 address 10.0.0.11 255.255.255.254
+ encapsulation dot1q 1213
+!
+interface GigabitEthernet0/0/0/0.1313
+ vrf A
+ ipv4 address 13.3.13.13 255.255.255.0
+ encapsulation dot1q 1313
+!
+interface GigabitEthernet0/0/0/0.1314
+ ipv4 address 1.13.14.13 255.255.255.0
+ ipv6 address 2001:d:e::d/64
+ encapsulation dot1q 1314
+!
+interface GigabitEthernet0/0/0/0.2313
+ vrf B
+ ipv4 address 23.3.13.13 255.255.255.0
+ encapsulation dot1q 2313
+!
+interface GigabitEthernet0/0/0/0.3567
+ description PE4-PE3-BR3-BR4
+ ipv4 address 10.2.0.44 255.255.255.0
+ ipv6 address fc00::10:2:0:44/112
+ encapsulation dot1q 3567
+!
+route-policy allow
+  pass
+end-policy
+!
+route-policy RR-out
+  set next-hop self
+end-policy
+!
+router isis 1
+ is-type level-2-only
+ net 0001.0000.0000.0044.00
+ address-family ipv4 unicast
+  metric-style wide
+  advertise passive-only
+  mpls traffic-eng level-2-only
+  mpls traffic-eng router-id Loopback0
+  mpls ldp auto-config
+ !
+ interface Loopback0
+  passive
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0.513
+  point-to-point
+  address-family ipv4 unicast
+   metric 100
+  !
+ !
+ interface GigabitEthernet0/0/0/0.1213
+  point-to-point
+  address-family ipv4 unicast
+  !
+ !
+!
+router bgp 65000
+ bgp unsafe-ebgp-policy
+ address-family ipv4 unicast
+  additional-paths receive
+  additional-paths send
+ !
+ neighbor-group RR
+  remote-as 65000
+  update-source Loopback0
+  address-family ipv4 unicast
+   route-policy RR-out out
+  !
+ !
+ neighbor 10.2.0.4
+  remote-as 65002
+  address-family ipv4 unicast
+  !
+ !
+ neighbor 172.16.0.201
+  use neighbor-group RR
+ !
+ neighbor 172.16.0.202
+  use neighbor-group RR
+ !
+!
+mpls oam
+!
+rsvp
+ interface GigabitEthernet0/0/0/0.513
+ !
+ interface GigabitEthernet0/0/0/0.1213
+ !
+ interface GigabitEthernet0/0/0/0.3567
+ !
+!
+mpls traffic-eng
+ interface GigabitEthernet0/0/0/0.513
+ !
+ interface GigabitEthernet0/0/0/0.1213
+ !
+ interface GigabitEthernet0/0/0/0.3567
+ !
+!
+mpls ldp
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+   !
+  !
+ !
+!
+ssh server v2
+end

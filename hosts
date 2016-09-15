@@ -1,5 +1,3 @@
-[all]
-
 [cisco]
 pe2 ansible_ssh_host=192.168.1.21 os=ios
 p2 ansible_ssh_host=192.168.1.22 os=ios
@@ -12,3 +10,7 @@ ce2 ansible_ssh_host=192.168.1.42 os=jun
 pe1 ansible_ssh_host=192.168.1.43 os=jun
 p1 ansible_ssh_host=192.168.1.44 os=jun
 rr1 ansible_ssh_host=192.168.1.45 os=jun
+pe3 ansible_ssh_host=192.168.1.46 os=jun
+br3 ansible_ssh_host=192.168.1.47 os=jun
+br4 ansible_ssh_host=192.168.1.48 os=jun
+

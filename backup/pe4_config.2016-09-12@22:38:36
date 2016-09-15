@@ -1,0 +1,24 @@
+
+Mon Sep 12 22:38:16.418 UTC
+Building configuration...
+!! IOS XR Configuration 5.2.2
+!! Last configuration change at Sat Sep 10 18:40:25 2016 by rado
+!
+hostname RR2
+logging console debugging
+line default
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+ transport preferred ssh
+!
+vty-pool default 0 4 line-template default
+interface MgmtEth0/0/CPU0/0
+ ipv4 address 192.168.1.24 255.255.255.0
+!
+route-policy allow
+  pass
+end-policy
+!
+ssh server v2
+end

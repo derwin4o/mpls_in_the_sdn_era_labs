@@ -1,0 +1,43 @@
+
+Mon Sep 12 22:38:16.646 UTC
+Building configuration...
+!! IOS XR Configuration 5.2.2
+!! Last configuration change at Mon Sep 12 00:26:48 2016 by rado
+!
+hostname RRRRRRRRRRR
+logging console debugging
+line default
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+ transport preferred ssh
+!
+vty-pool default 0 4 line-template default
+interface Loopback0
+ ipv4 address 172.16.0.22 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ ipv4 address 192.168.1.21 255.255.255.0
+!
+interface GigabitEthernet0/0/0/0.902
+ ipv4 address 10.1.0.5 255.255.255.254
+ encapsulation dot1q 902
+!
+interface GigabitEthernet0/0/0/0.903
+ ipv4 address 10.0.0.1 255.255.255.254
+ encapsulation dot1q 903
+!
+interface GigabitEthernet0/0/0/0.905
+ ipv4 address 10.1.0.3 255.255.255.254
+ encapsulation dot1q 905
+!
+interface GigabitEthernet0/0/0/0.907
+ ipv4 address 10.0.0.4 255.255.255.254
+ encapsulation dot1q 907
+!
+route-policy allow
+  pass
+end-policy
+!
+ssh server v2
+end

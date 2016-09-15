@@ -1,0 +1,34 @@
+---
+- name: transfer generated file to IOS
+  hosts: cisco
+  gather_facts: no
+#  set_fact: 
+#    src_file: "{{ playbook_dir }}/compiled/{{ inventory_hostname }}"
+  vars:
+    cli:
+      host: "{{ ansible_ssh_host }}"
+      username: rado
+      transport: cli
+      ssh_keyfile: /home/rado/.ssh/z-id_rsa
+  tasks:
+  - name: copy files to tftp directory
+    copy: src={{ playbook_dir }}/compiled/{{ inventory_hostname }}  dest=/var/lib/tftpboot
+
+  - name: load a config from disk and replace the current config
+    script: ./upload_xr.py "{{ ansible_ssh_host }}" "tftp://192.168.1.249/{{ inventory_hostname }}/generated.cfg"
+#    register: res
+#  - debug: var=res.stdout_lines
+#    iosxr_template:
+#      src: "{{ playbook_dir }}/compiled/{{ inventory_hostname }}/fabric.cfg"
+##      update: replace
+#      force: yes
+#      provider: "{{ cli }}" 
+#   
+#  - name: transfer generated file to IOS
+#    ios_command:
+#      commands:
+#        - copy tftp://192.168.1.249/{{ inventory_hostname }}/fabric.conf disk0:fabric.conf
+#        - \n
+#      provider: "{{ cli }}"
+#    register: res
+#  - debug: var=res.stdout_lines 

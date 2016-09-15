@@ -1,43 +1,35 @@
 ---
 - name: Prepare conf dirs for every host in inventory file
   hosts: all
-  gather_facts: yes 
-  connection: local
+  gather_facts: no
   vars:
-#    ansible_python_interpreter: "/usr/bin/env python"
     conf_dir: "{{playbook_dir}}/compiled/{{ inventory_hostname }}"
     cli:
       host: "{{ ansible_ssh_host }}"
-      username: rado
-      transport: cli
-
+  
   pre_tasks:
     - set_fact: conf_dir="{{conf_dir}}"
 
-#    - name: run show version on remote devices
-#      ios_command:
-#        commands: 
-#          - show interface descr
-#        provider: "{{ cli }}"
-#      register: interfaces
-#    - debug: var=interfaces.stdout_lines
+
     - name: Remove old config
       file: path={{ conf_dir }} state=absent
       changed_when: False
 #      when: commit_changes | match('0')
       always_run: yes
       tags: ['always']
+
     - name: Create placeholder for building templates
       file: path=compiled/{{ inventory_hostname }}/ state=directory
       changed_when: False
 #      when: commit_changes | match('0')
       always_run: yes
       tags: ['always']
-#### START ROLES
+  
+- include: show_jun.yml  
+- include: show_cisco.yml
+ 
 - name: build initial conf for every host in inventory
-  hosts: all
-  gather_facts: no
-  connection: local
+  hosts: all 
   roles:
     - build_conf
-
+- include: copy_cisco_conf.yml

@@ -1,6 +1,10 @@
 ---
 - name: "Building fabric configuration"
-  template: src="{{os}}/fabric.j2" dest="{{ conf_dir }}/fabric.conf"
+  template: src="{{os}}/fabric.j2" dest="{{ conf_dir }}/generated.cfg"
   changed_when: False
   connection: local
+#  gather_facts: no
 #  when: commit_changes | match('0')
+- name: "Copy conf to TFTP"
+  copy: src="{{playbook_dir}}/compiled/" dest=/var/lib/tftpboot/.
+

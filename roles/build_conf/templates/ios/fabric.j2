@@ -1,24 +1,46 @@
 {% macro conf_link_p2p(inventory_hostname, vlan, peer, pref, is_left) -%}
 {% set ip = pref|ipaddr(0) if is_left else pref|ipaddr(1) %}
 
-
 interface gi0/0/0/0.{{ vlan }}
-  desc {{ inventory_hostname }}-{{ peer }}
+  description {{ inventory_hostname }}-{{ peer }}
   ip address {{ ip }}
   encapsulation dot1q {{ vlan }}
 
 {%- endmacro %}
+
+
 
 {% macro conf_link(inventory_hostname, vlan, desc,  pref) -%}
 {% set ip = pref|ipaddr('host') %}
 
 
 interface gi0/0/0/0.{{ vlan }}
-  desc {{ desc }}
+  description {{ desc }}
   ip address {{ ip }}
   encapsulation dot1q {{ vlan }}
 
 {%- endmacro %}
+
+hostname {{ inventory_hostname }}
+logging console debugging
+line default
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+ transport preferred ssh
+!
+vty-pool default 0 4 line-template default
+!
+interface MgmtEth0/0/CPU0/0
+ ipv4 address {{ ansible_ssh_host }} 255.255.255.0
+!
+!
+route-policy allow
+  pass
+end-policy
+!
+ssh server v2
+end
 
 interface lo0
    ip address {{ lo40 }}/32

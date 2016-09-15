@@ -1,0 +1,18 @@
+---
+- name: transfer generated file to IOS
+  hosts: cisco
+  gather_facts: no
+  connection: local
+  vars:
+    cli:
+      host: "{{ ansible_ssh_host }}"
+      username: rado
+      transport: cli
+      ssh_keyfile: /home/rado/.ssh/z-id_rsa
+  tasks:
+  - name: load a config from disk and replace the current config
+    iosxr_config:
+      src: "fabric.cfg" 
+      update: replace
+      backup: no
+      provider: "{{ cli }}" 

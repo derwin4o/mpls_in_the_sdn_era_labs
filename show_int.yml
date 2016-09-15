@@ -1,0 +1,20 @@
+---
+- name: Prepare conf dirs for every host in inventory file
+  hosts: cisco
+  gather_facts: no
+  connection: local
+  vars:
+#    ansible_python_interpreter: "/usr/bin/env python"
+    cli:
+      host: "{{ ansible_ssh_host }}"
+      username: rado
+      transport: cli
+      ssh_keyfile: /root/.ssh/z-id_rsa
+  tasks:  
+    - name: run show version on remote devices
+      ios_command:
+        commands: 
+          - show interface descr
+        provider: "{{ cli }}"
+      register: interfaces
+    - debug: var=interfaces.stdout_lines
