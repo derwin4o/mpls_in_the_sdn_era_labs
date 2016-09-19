@@ -25,11 +25,12 @@
       always_run: yes
       tags: ['always']
   
-- include: show_jun.yml  
-- include: show_cisco.yml
+#- include: show_jun.yml  
+#- include: show_cisco.yml
  
 - name: build initial conf for every host in inventory
   hosts: all 
   roles:
     - build_conf
-- include: copy_cisco_conf.yml
+#- include: copy_cisco_conf.yml
+- include: load_juniper_conf.yml

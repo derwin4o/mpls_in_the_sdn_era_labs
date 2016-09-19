@@ -1,0 +1,19 @@
+---
+- name: transfer generated file to Juniper
+  hosts: jun
+  gather_facts: no
+  vars:
+    netconf:
+      host: "{{ ansible_ssh_host }}"
+      username: rado
+      ssh_keyfile: /home/rado/.ssh/z-id_rsa
+  
+  tasks:
+  - name: load configure file into device
+#    junos_install_config: 
+    junos_template:
+      src: "{{ playbook_dir }}/compiled/{{ inventory_hostname }}/generated.cfg"
+      comment: update config
+      provider: "{{ netconf }}"
+      action: overwrite
+#      confirm: 5
