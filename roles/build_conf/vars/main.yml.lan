@@ -1,7 +1,0 @@
-scheme:
-- { left: j1, vlan: 901, right: c1, prefix: 3.3.3.2/31 }
-- { left: c1, vlan: 902, right: j1, prefix: 9.9.9.8/31 }
-- { lan: c1, vlan: 903, desc: lan_c1-j1-c2-j2, address: 5.5.5.1/24 }
-- { lan: j1, vlan: 903, desc: lan-c1-j1-c2-j2, address: 5.5.5.2/24 }
-- { lan: c2, vlan: 903, desc: lan_c1-j1-c2-j2, address: 5.5.5.13/24 }
-- { lan: j2, vlan: 903, desc: lan-c1-j1-c2-j2, address: 5.5.5.22/24 }
